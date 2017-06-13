@@ -52,7 +52,7 @@ rbind("Mean" = mean(Data$P), "min" =  min(Data$P), "max" = max(Data$P))
 ```
 
 
-### Summarize Method 2
+### Summarize Method 2 - dplyr
 ```{r}
 library(dplyr)
 # Explore data
@@ -75,6 +75,18 @@ library(dplyr)
                 summarise_all(funs(mean(., na.rm = T), sd(., na.rm = T)))
 
 ```
+
+### Summarize Method 3 - SQL language
+```{r}
+library(sqldf)
+
+sqldf("select Gender, count(X1) `n`, avg(X1) `Mean X1`, stdev(X1) `SD X1` from Data group by Gender")
+
+?sqldf
+
+
+```
+
 
 ### Catigorical variables
 ```{r}
@@ -117,6 +129,8 @@ Data2 = read.csv("/Users/cpetersen/Desktop/TEST.csv")
 
 
 # Convert data set into a model
+
+The point of this chunk is to only develop an outcome that we will model
 ```{r}
 # Add in some error term
         er = 10+10*rnorm(n)
@@ -151,8 +165,8 @@ ggplot(data = Data, aes(x = P, y = Outcome)) +
 ```
 
 ```{r}
-install.packages("swirl")
-library(swirl)
-swirl()
+#install.packages("swirl")
+#library(swirl)
+#swirl()
 ```
 
