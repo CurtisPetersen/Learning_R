@@ -1,0 +1,93 @@
+---
+title: "Learning R Live!"
+author: "Curtis Petersen"
+date: "6/7/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+
+#Create a data set
+```{r}
+# Set seed to ensure reproducability 
+        set.seed(123)
+
+# Create data
+        n <- 1000 # Number of individuals, 1,000
+        Age = 20 + 60 * runif(n) # Create each individuals age; generate uniformly distributed number between 0 and 1, multiply by 60 and add 20 to get an uniformly distrubuted age range between 20 and 80
+        Gender = runif(n) < 0.5 # Generate indicator for gender so about 50% of the population is female
+        X1 = rnorm(n, mean = 20, sd = 5) # Generate random variable from normal distribution, with mean = 20 and sd = 5
+        X2 = runif(n) < 0.3 # Generate an indicator for values from the unicorm distribution under 0.3
+        P = 20 + 5*rnorm(n) # Generate Predictor that is 5 * a number from the normal distribution + 20
+        
+# Connect all these vectors into single object
+        Data <- cbind(P, Age, Gender, X1, X2) # Bind these objects together as a matrix
+        Data = as.data.frame(Data) # Convert the above matrix to a data frame
+```
+
+
+#Wrangle some data
+
+##Method 1
+```{r}
+cbind("Mean" = mean(Data$P), "Min" =  min(Data$P), "Max" = max(Data$P))
+```
+
+
+###Summarize Method 2
+```{r}
+library(dplyr)
+
+# Explore data
+        Data %>%
+                group_by(Gender) %>%
+                summarise("n" = n(),
+                          "Mean X1" = mean(X1),
+                          "SD X1" = sd(X1)
+                          )
+        
+# Means of all variables in data frame
+        
+        # Get names of all columns
+        dat_cov <- names(Data)
+        
+        # Create summary table
+        Data %>%
+                group_by(Gender) %>%
+                select(one_of(dat_cov)) %>%
+                summarise_all(funs(mean(., na.rm = T), sd(., na.rm = T)))
+
+```
+
+This is some text! Hey looking at the table above, I can see that the Gender distribution is about equal, and the mean and SD of X1 are approximately equal as well! BUT THIS TABLE DOES NOT LOOK SO GOOD, DOES IT?
+
+```{r, results="asis"}
+library(knitr)
+DT = Data %>%
+        group_by(Gender) %>%
+        select(one_of(dat_cov)) %>%
+        summarise_all(funs(mean(., na.rm = T), sd(., na.rm = T)))
+
+
+kable(round(DT, 2))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

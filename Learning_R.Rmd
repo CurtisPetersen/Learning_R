@@ -1,0 +1,158 @@
+---
+title: "Learning R"
+author: "Curtis Petersen"
+date: "6/7/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+col1 <- c(0909, 91746, 98105, 0912874, 09174, 832750, 91471)
+
+col1
+```
+
+#Create dataset
+```{r}
+# Set seed to ensure reproducability 
+        set.seed(123)
+
+# Create data
+        n <- 1000 # Number of individuals, 10,000
+        Age = 20+60*runif(n) # Create each individuals age; generate uniformly distributed number between 0 and 1, multiply by 60 and add 20 to get an uniformly distrubuted age range between 20 and 80
+        Gender = runif(n) < 0.5 # Generate indicator for gender so about 50% of the population is female
+        X1 = rnorm(n, mean = 20, sd = 5)
+        X2 = runif(n) < 0.3
+        P = 20 + 5*rnorm(n) # Generate Predictor
+
+# Connect all these vectors into single object
+        Data <- cbind(P, Age, Gender, X1, X2)
+
+# Convert matrix "Data" into data frame
+        Data = as.data.frame(Data)
+```
+
+
+#Data wrangling
+
+###Summarize Method 1
+```{r}
+table(Data$P)
+
+mean(Data$P)
+
+min(Data$P)
+max(Data$P)
+rbind("Mean" = mean(Data$P), "min" =  min(Data$P), "max" = max(Data$P))
+
+```
+
+
+###Summarize Method 2
+```{r}
+library(dplyr)
+# Explore data
+        Data %>%
+                group_by(Gender) %>%
+                summarise("n" = n(),
+                          "Mean X1" = mean(X1),
+                          "SD X1" = sd(X1)
+                          )
+        
+# Means of all variables in data frame
+        
+        # Get names of all columns
+        dat_cov <- names(Data)
+        
+        # Create summary table
+        Data %>%
+                group_by(Gender) %>%
+                select(one_of(dat_cov)) %>%
+                summarise_all(funs(mean(., na.rm = T), sd(., na.rm = T)))
+
+```
+
+###Catigorical variables
+```{r}
+# Convert Gender into factor
+        class(Data$Gender)
+
+        Data$Gender = factor(Data$Gender)
+        class(Data$Gender)
+        
+# Create new labeled gender variable
+        Data$Gender2 = factor(Data$Gender, labels = c("Male", "Female"))
+        Data$Gender2 <- NULL
+        
+# Using pipes
+        Data = Data %>%
+                transform(Gender = factor(Gender, labels = c("Male", "Female")))
+        
+# Create catigories from continuous
+        
+        # Method 1
+        Data$Age5cat = cut(Data$Age, 5)
+        
+        
+        # Method 2
+        seq(20, 80, by = 10)
+        
+        Data$Age5cat2 = cut(Data$Age, breaks = seq(20, 80, by = 10), labels = c("20-29", "30-39", "40-49", "50-59", "60-69", "70-79"))
+        
+        levels(Data$Age5cat2)
+```
+
+
+
+#Write & read .csv
+```{r}
+write.csv(Data, "/Users/cpetersen/Desktop/TEST.csv")
+
+Data2 = read.csv("/Users/cpetersen/Desktop/TEST.csv")
+```
+
+
+#Convert data set into a model
+```{r}
+# Add in some error term
+        er = 10+10*rnorm(n)
+
+# Create model for our outcome
+        Data$Outcome = 4*P + -0.1*Age + 1*Gender + 0.5*X1 + 1.5*X2 + er
+
+```
+
+
+#Create model of data
+```{r}
+mod1 = glm(Outcome ~ P + Age + Gender + X1 + X2, data = Data)
+
+# Examine summary of model
+        summary(mod1)
+
+# Examine odds ratios
+        exp(coef(mod1))
+        
+        exp(cbind(coef(mod1), confint(mod1)))
+```
+
+
+#Graph model
+```{r}
+library(ggplot2)
+ggplot(data = Data, aes(x = P, y = Outcome)) +
+        geom_jitter(aes()) + 
+        geom_smooth(model = lm) + 
+        theme_classic()
+```
+
+```{r}
+install.packages("swirl")
+library(swirl)
+swirl()
+```
+
