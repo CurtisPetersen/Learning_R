@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 
-#Create a data set
+# Create a data set
 ```{r}
 # Set seed to ensure reproducability 
         set.seed(123)
@@ -31,15 +31,15 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 
-#Wrangle some data
+# Wrangle some data
 
-##Method 1
+## Method 1
 ```{r}
 cbind("Mean" = mean(Data$P), "Min" =  min(Data$P), "Max" = max(Data$P))
 ```
 
 
-###Summarize Method 2
+### Summarize Method 2
 ```{r}
 library(dplyr)
 
