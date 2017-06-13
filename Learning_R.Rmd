@@ -52,7 +52,7 @@ rbind("Mean" = mean(Data$P), "min" =  min(Data$P), "max" = max(Data$P))
 ```
 
 
-###Summarize Method 2
+### Summarize Method 2
 ```{r}
 library(dplyr)
 # Explore data
@@ -76,7 +76,7 @@ library(dplyr)
 
 ```
 
-###Catigorical variables
+### Catigorical variables
 ```{r}
 # Convert Gender into factor
         class(Data$Gender)
@@ -108,7 +108,7 @@ library(dplyr)
 
 
 
-#Write & read .csv
+# Write & read .csv
 ```{r}
 write.csv(Data, "/Users/cpetersen/Desktop/TEST.csv")
 
@@ -116,7 +116,7 @@ Data2 = read.csv("/Users/cpetersen/Desktop/TEST.csv")
 ```
 
 
-#Convert data set into a model
+# Convert data set into a model
 ```{r}
 # Add in some error term
         er = 10+10*rnorm(n)
@@ -127,7 +127,7 @@ Data2 = read.csv("/Users/cpetersen/Desktop/TEST.csv")
 ```
 
 
-#Create model of data
+# Create model of data
 ```{r}
 mod1 = glm(Outcome ~ P + Age + Gender + X1 + X2, data = Data)
 
@@ -141,7 +141,7 @@ mod1 = glm(Outcome ~ P + Age + Gender + X1 + X2, data = Data)
 ```
 
 
-#Graph model
+# Graph model
 ```{r}
 library(ggplot2)
 ggplot(data = Data, aes(x = P, y = Outcome)) +
