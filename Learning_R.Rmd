@@ -16,7 +16,7 @@ col1 <- c(0909, 91746, 98105, 0912874, 09174, 832750, 91471)
 col1
 ```
 
-#Create dataset
+# Create dataset
 ```{r}
 # Set seed to ensure reproducability 
         set.seed(123)
@@ -37,9 +37,9 @@ col1
 ```
 
 
-#Data wrangling
+# Data wrangling
 
-###Summarize Method 1
+### Summarize Method 1
 ```{r}
 table(Data$P)
 
